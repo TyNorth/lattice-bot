@@ -19,5 +19,8 @@ export const useMemoryStore = defineStore('memory', {
       if (!this.currentConversationId) return []
       return await searchMemory(this.currentConversationId, queryEmbedding, similarityThreshold)
     },
+    async testMemory() {
+      return 'test, good.'
+    },
   },
 })

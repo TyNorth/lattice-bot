@@ -47,7 +47,10 @@ export default defineConfig((ctx) => {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {},
+      env: {
+        SUPABASE_URL: process.env.SUPABASE_URL,
+        SUPABASE_KEY: process.env.SUPABASE_KEY,
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
@@ -109,7 +112,7 @@ export default defineConfig((ctx) => {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Dark', 'Cookies', 'IconSet', 'AddressbarColor'],
+      plugins: ['Dark', 'Cookies', 'IconSet', 'AddressbarColor', 'Notify'],
     },
 
     // animations: 'all', // --- includes all animations

@@ -1,10 +1,10 @@
 import { supabase } from 'src/boot/supabase'
 
-export const getUserById = async (userId) => {
-  const { data, error } = await supabase.from('auth.users').select('*').eq('id', userId).single()
+export const getUserById = async () => {
+  const { data: user, error } = await supabase.auth.getUser()
 
   if (error) throw new Error(error.message)
-  return data
+  return user
 }
 
 export const updateUserTheme = async (userId, theme) => {

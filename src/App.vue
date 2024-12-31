@@ -1,30 +1,41 @@
 <template>
-  <q-page :class="{ dark: $q.dark.isActive, light: !$q.dark.isActive }">
+  <div :class="{ dark: $q.dark.isActive, light: !$q.dark.isActive }">
     <router-view />
-  </q-page>
+  </div>
 </template>
 
 <script setup>
-import { watch } from 'vue'
+import { onMounted, onUnmounted, watch } from 'vue'
 import { Dark } from 'quasar' // Import Quasar Dark plugin
 import { useUserStore } from 'src/stores/userStore'
 import { useConversationStore } from 'src/stores/conversationStore'
-import { useMemoryStore } from 'src/stores/memoryStore'
 import { useProjectStore } from 'src/stores/projectStore'
 import { useInstructionStore } from 'src/stores/instructionStore'
 
 // Initialize stores
 const userStore = useUserStore()
 const conversationStore = useConversationStore()
-const memoryStore = useMemoryStore()
 const projectStore = useProjectStore()
 const instructionStore = useInstructionStore()
 
-// Fetch user and set theme on app load
-await userStore.fetchUser()
+onMounted(async () => {
+  try {
+    // Initialize user store and set up authentication listener
+    const cleanupAuthListener = await userStore.initialize()
 
-// Apply user's theme preference or auto-detect
-Dark.set(userStore.theme === 'auto' ? 'auto' : userStore.theme === 'dark')
+    // Preload user-related data if the user is logged in
+    if (userStore.getUser) {
+      await conversationStore.fetchConversations(userStore.getUser.id)
+      await projectStore.fetchProjects(userStore.getUser.id)
+      await instructionStore.fetchInstructions(userStore.getUser.id)
+    }
+
+    // Cleanup listener on component unmount
+    onUnmounted(() => cleanupAuthListener())
+  } catch (error) {
+    console.error('Error during initialization:', error)
+  }
+})
 
 // Watch for changes in theme preference
 watch(
@@ -33,17 +44,10 @@ watch(
     Dark.set(newTheme === 'auto' ? 'auto' : newTheme === 'dark')
   },
 )
-
-// Preload user-related data
-if (userStore.user) {
-  await conversationStore.fetchConversations(userStore.user.id)
-  await projectStore.fetchProjects(userStore.user.id)
-  await instructionStore.fetchInstructions(userStore.user.id)
-}
 </script>
 
 <style>
-/* Example styles for light and dark modes */
+/* Light and dark mode styles */
 .light {
   background-color: #f9f9f9;
   color: #000;
