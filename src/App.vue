@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, watch } from 'vue'
+import { onMounted, onUnmounted, watch, ref } from 'vue'
 import { Dark } from 'quasar' // Import Quasar Dark plugin
 import { useUserStore } from 'src/stores/userStore'
 import { useConversationStore } from 'src/stores/conversationStore'
@@ -18,16 +18,19 @@ const conversationStore = useConversationStore()
 const projectStore = useProjectStore()
 const instructionStore = useInstructionStore()
 
+const user = ref(null)
+
 onMounted(async () => {
   try {
     // Initialize user store and set up authentication listener
     const cleanupAuthListener = await userStore.initialize()
 
     // Preload user-related data if the user is logged in
-    if (userStore.getUser) {
-      await conversationStore.fetchConversations(userStore.getUser.id)
-      await projectStore.fetchProjects(userStore.getUser.id)
-      await instructionStore.fetchInstructions(userStore.getUser.id)
+    user.value = userStore.getUser.id
+    if (userStore.getUser.id) {
+      await conversationStore.fetchConversations(user.value)
+      await projectStore.fetchProjects(user.value)
+      await instructionStore.fetchInstructions(user.value)
     }
 
     // Cleanup listener on component unmount

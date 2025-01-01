@@ -1,6 +1,6 @@
 <template>
   <div class="chat-header">
-    <span class="sym_o_menu" @click="$emit('toggleSidebar')"></span>
+    <q-btn flat icon="sym_o_menu" @click="$emit('toggleSidebar')" color="negative" />
     <h1>{{ title }}</h1>
     <q-btn flat icon="sym_o_delete" @click="$emit('deleteConversation')" color="negative" />
   </div>

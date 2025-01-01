@@ -4,7 +4,7 @@ import { updateUserTheme, updateUserLastLogin } from 'src/database/users'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    user: null, // Stores the current user object
+    user: {}, // Stores the current user object
     theme: 'auto', // Stores the current theme (default: auto)
   }),
 
@@ -28,6 +28,15 @@ export const useUserStore = defineStore('user', {
 
       // Cleanup listener on store destruction
       return () => authListener.unsubscribe()
+    },
+    setUser(user) {
+      this.user = user
+      this.theme = user?.user_metadata?.theme || 'auto'
+    },
+
+    async fetchUser() {
+      const { data: user } = await supabase.auth.getUser()
+      this.setUser(user)
     },
 
     // Update the user's theme preference

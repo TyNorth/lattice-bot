@@ -40,6 +40,7 @@ const conversationStore = useConversationStore()
 
 // Reactive data for conversations and the current conversation
 const conversations = computed(() => conversationStore.conversations)
+console.log(conversations.value)
 const currentConversation = computed(() => conversationStore.currentConversation)
 
 // Create a new conversation

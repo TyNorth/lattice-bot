@@ -1,6 +1,6 @@
 <template>
   <div class="chat-page">
-    <Sidebar v-if="showSidebar" class="chat-sidebar" />
+    <Sidebar v-if="showSidebar" class="chat-sidebar" :conversations="conversations" />
     <ChatInterface class="chat-main" @toggleSidebar="toggleSidebar" />
   </div>
 </template>
@@ -8,13 +8,26 @@
 <script setup>
 import Sidebar from 'src/components/Sidebar/SideBar.vue'
 import ChatInterface from 'src/components/Chat/ChatInterface.vue'
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useConversationStore } from 'src/stores/conversationStore'
+import { useUserStore } from 'src/stores/userStore'
+
+const conversationsStore = useConversationStore()
+const userStore = useUserStore()
+
+const user = ref(null)
+let conversations
 
 const showSidebar = ref(true)
 
 const toggleSidebar = () => {
   showSidebar.value = !showSidebar.value
 }
+
+onMounted(async () => {
+  user.value = userStore.getUser.id
+  conversations = computed(conversationsStore.fetchConversations(user.value))
+})
 </script>
 
 <style scoped lang="scss">

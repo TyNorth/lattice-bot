@@ -1,5 +1,5 @@
 <template>
-  <q-page class="login-page">
+  <div class="login-page">
     <div class="login-container">
       <div class="login-box">
         <img src="/logo.png" alt="MindLink AI Logo" class="logo" />
@@ -48,7 +48,7 @@
         <span>Version 1.0</span> | <span>Powered by Quasar + Supabase</span>
       </footer>
     </div>
-  </q-page>
+  </div>
 </template>
 
 <script setup>
@@ -57,6 +57,9 @@ import { supabase } from 'src/boot/supabase'
 import { useQuasar } from 'quasar'
 import { notifySuccess, notifyError } from 'src/utils/notify'
 import { useRouter } from 'vue-router'
+import { useUserStore } from 'src/stores/userStore'
+
+const userStore = useUserStore() // Access the user store
 
 // Form fields
 const email = ref('')
@@ -70,7 +73,7 @@ const $q = useQuasar()
 const handleLogin = async () => {
   loading.value = true
   try {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: email.value,
       password: password.value,
     })
@@ -78,6 +81,9 @@ const handleLogin = async () => {
     if (error) {
       notifyError(error.message)
     } else {
+      // Update the user store with the logged-in user
+      console.log(data.user)
+      userStore.setUser(data.user)
       notifySuccess('Login successful!')
       // Redirect to main page (or dashboard)
       router.push('/chat')
