@@ -32,11 +32,14 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useConversationStore } from 'src/stores/conversationStore'
+import { useUserStore } from 'src/stores/userStore'
 
 // Get the conversation store
 const conversationStore = useConversationStore()
+const userStore = useUserStore()
+const userId = ref()
 
 // Reactive data for conversations and the current conversation
 const conversations = computed(() => conversationStore.conversations)
@@ -45,7 +48,7 @@ const currentConversation = computed(() => conversationStore.currentConversation
 
 // Create a new conversation
 const startNewConversation = async () => {
-  await conversationStore.startConversation('New Conversation')
+  await conversationStore.startConversation(userId.value, 'New Conversation')
 }
 
 // Select a conversation
@@ -61,6 +64,10 @@ const formatDate = (date) => {
     year: 'numeric',
   })
 }
+
+onMounted(() => {
+  userId.value = userStore.getUser.id
+})
 </script>
 
 <style scoped lang="scss">

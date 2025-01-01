@@ -8,6 +8,7 @@ import { Notify } from 'quasar'
 export const notifySuccess = (message, options = {}) => {
   Notify.create({
     type: 'positive',
+    icon: 'sym_o_check_circle', // Success icon
     message,
     position: 'top-right',
     timeout: 3000,
@@ -23,6 +24,7 @@ export const notifySuccess = (message, options = {}) => {
 export const notifyError = (message, options = {}) => {
   Notify.create({
     type: 'negative',
+    icon: 'sym_o_error', // Error icon
     message,
     position: 'top-right',
     timeout: 5000,
@@ -38,6 +40,7 @@ export const notifyError = (message, options = {}) => {
 export const notifyWarning = (message, options = {}) => {
   Notify.create({
     type: 'warning',
+    icon: 'sym_o_warning', // Warning icon
     message,
     position: 'top-right',
     timeout: 4000,
@@ -53,6 +56,7 @@ export const notifyWarning = (message, options = {}) => {
 export const notifyInfo = (message, options = {}) => {
   Notify.create({
     type: 'info',
+    icon: 'sym_o_info', // Info icon
     message,
     position: 'top-right',
     timeout: 3000,
