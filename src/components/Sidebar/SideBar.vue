@@ -28,6 +28,54 @@
         </q-item-section>
       </q-item>
     </div>
+
+    <!-- Memory Management Section -->
+    <div class="memory-management">
+      <h2>Memory Management</h2>
+      <q-btn
+        no-caps
+        icon="sym_o_edit"
+        outline
+        unelevated
+        color="secondary"
+        label="Edit Memories"
+        @click="openMemoryDialog"
+        class="edit-memory-btn"
+      />
+    </div>
+
+    <!-- Memory Dialog -->
+    <q-dialog v-model="showMemoryDialog">
+      <q-card>
+        <q-card-section>
+          <h3>Memories for {{ currentConversation?.title || 'this conversation' }}</h3>
+        </q-card-section>
+        <q-card-section>
+          <div v-if="memoryList.length === 0" class="empty-memories">
+            No memories found for this conversation.
+          </div>
+          <div v-for="memory in memoryList" :key="memory.id" class="memory-item">
+            <q-input
+              v-model="memory.content"
+              outlined
+              dense
+              label="Edit Memory"
+              @blur="updateMemory(memory.id, memory.content)"
+            />
+            <q-btn
+              flat
+              icon="sym_o_delete"
+              color="negative"
+              @click="deleteMemory(memory.id)"
+              class="delete-memory-btn"
+            />
+          </div>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Close" color="primary" @click="closeMemoryDialog" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -35,16 +83,22 @@
 import { computed, ref, onMounted } from 'vue'
 import { useConversationStore } from 'src/stores/conversationStore'
 import { useUserStore } from 'src/stores/userStore'
-
+import { useMemoryStore } from 'src/stores/memoryStore'
 // Get the conversation store
 const conversationStore = useConversationStore()
+const memoryStore = useMemoryStore()
 const userStore = useUserStore()
 const userId = ref()
+
+const showMemoryDialog = ref(false)
 
 // Reactive data for conversations and the current conversation
 const conversations = computed(() => conversationStore.conversations)
 console.log(conversations.value)
 const currentConversation = computed(() => conversationStore.currentConversation)
+
+// memory
+const memoryList = computed(() => memoryStore.memory)
 
 // Create a new conversation
 const startNewConversation = async () => {
@@ -63,6 +117,27 @@ const formatDate = (date) => {
     day: 'numeric',
     year: 'numeric',
   })
+}
+
+// Methods for memory dialog
+const openMemoryDialog = async () => {
+  if (currentConversation.value) {
+    await memoryStore.fetchMemory(currentConversation.value.id)
+  }
+  showMemoryDialog.value = true
+}
+
+const closeMemoryDialog = () => {
+  showMemoryDialog.value = false
+}
+
+// Methods for updating and deleting memories
+const updateMemory = async (memoryId, newContent) => {
+  await memoryStore.editMemory(memoryId, newContent)
+}
+
+const deleteMemory = async (memoryId) => {
+  await memoryStore.deleteMemory(memoryId)
 }
 
 onMounted(() => {
@@ -130,5 +205,46 @@ onMounted(() => {
     font-size: 0.9rem;
     text-transform: none;
   }
+}
+
+.memory-management {
+  padding: 1rem;
+  background-color: var(--q-surface);
+
+  h2 {
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--q-primary-light);
+    color: var(--q-primary);
+    border-bottom: 1px solid var(--q-divider);
+  }
+
+  .edit-memory-btn {
+    width: 100%;
+  }
+}
+
+.memory-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  q-input {
+    flex-grow: 1;
+    margin-right: 0.5rem;
+  }
+
+  .delete-memory-btn {
+    flex-shrink: 0;
+  }
+}
+
+.empty-memories {
+  color: var(--q-color-grey-6);
+  text-align: center;
+  margin: 1rem 0;
 }
 </style>

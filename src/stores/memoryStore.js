@@ -1,5 +1,11 @@
 import { defineStore } from 'pinia'
-import { getConversationMemory, addMemory, searchMemory } from 'src/database/memory'
+import {
+  getConversationMemory,
+  addMemory,
+  searchMemory,
+  editMemory,
+  deleteMemory,
+} from 'src/database/memory'
 
 export const useMemoryStore = defineStore('memory', {
   state: () => ({
@@ -19,8 +25,20 @@ export const useMemoryStore = defineStore('memory', {
       if (!this.currentConversationId) return []
       return await searchMemory(this.currentConversationId, queryEmbedding, similarityThreshold)
     },
-    async testMemory() {
-      return 'test, good.'
+    async editMemory(memoryId, newContent) {
+      const updatedMemory = await editMemory(memoryId, newContent)
+
+      // Update the local store state
+      const memoryIndex = this.memory.findIndex((m) => m.id === memoryId)
+      if (memoryIndex !== -1) {
+        this.memory[memoryIndex] = updatedMemory
+      }
+    },
+    async deleteMemory(memoryId) {
+      await deleteMemory(memoryId)
+
+      // Remove from the local store state
+      this.memory = this.memory.filter((m) => m.id !== memoryId)
     },
   },
 })

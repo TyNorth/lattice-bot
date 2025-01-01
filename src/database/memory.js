@@ -32,3 +32,21 @@ export const searchMemory = async (conversationId, queryEmbedding, similarityThr
   if (error) throw new Error(error.message)
   return data
 }
+
+export const editMemory = async (memoryId, newContent) => {
+  const { data, error } = await supabase
+    .from('memory')
+    .update({ content: newContent })
+    .eq('id', memoryId)
+    .single()
+
+  if (error) throw new Error(error.message)
+  return data
+}
+
+export const deleteMemory = async (memoryId) => {
+  const { error } = await supabase.from('memory').delete().eq('id', memoryId)
+
+  if (error) throw new Error(error.message)
+  return true
+}

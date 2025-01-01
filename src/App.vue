@@ -27,6 +27,7 @@ onMounted(async () => {
 
     // Preload user-related data if the user is logged in
     user.value = userStore.getUser.id
+    Dark.set('auto')
     if (userStore.getUser.id) {
       await conversationStore.fetchConversations(user.value)
       await projectStore.fetchProjects(user.value)
