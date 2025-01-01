@@ -1,7 +1,11 @@
 <template>
   <div class="chat-page">
     <Sidebar v-if="showSidebar" class="chat-sidebar" :conversations="conversations" />
-    <ChatInterface class="chat-main" @toggleSidebar="toggleSidebar" />
+    <ChatInterface
+      class="chat-main"
+      @toggleSidebar="toggleSidebar"
+      :currentConversation="currentConversation"
+    />
   </div>
 </template>
 
@@ -11,22 +15,34 @@ import ChatInterface from 'src/components/Chat/ChatInterface.vue'
 import { ref, computed, onMounted } from 'vue'
 import { useConversationStore } from 'src/stores/conversationStore'
 import { useUserStore } from 'src/stores/userStore'
+import { useRouter } from 'vue-router'
 
-const conversationsStore = useConversationStore()
+const conversationStore = useConversationStore()
 const userStore = useUserStore()
+const router = useRouter()
 
-const user = ref(null)
-let conversations
-
+const conversations = computed(() => conversationStore.conversations)
+const currentConversation = computed(() => conversationStore.currentConversation)
 const showSidebar = ref(true)
 
 const toggleSidebar = () => {
   showSidebar.value = !showSidebar.value
 }
 
+// Fetch user and conversations on mount
 onMounted(async () => {
-  user.value = userStore.getUser.id
-  conversations = computed(conversationsStore.fetchConversations(user.value))
+  const userId = userStore.user?.id
+  if (!userId) {
+    console.error('No user found. Redirecting to login.')
+    router.push('/')
+    return // Optionally redirect to login if user is not logged in
+  }
+
+  try {
+    await conversationStore.fetchConversations(userId)
+  } catch (error) {
+    console.error('Error fetching conversations:', error)
+  }
 })
 </script>
 

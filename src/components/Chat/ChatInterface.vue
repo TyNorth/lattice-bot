@@ -2,7 +2,7 @@
   <div class="chat-interface">
     <ChatHeader
       :title="currentConversation?.title || 'New Conversation'"
-      @toggleSidebar="toggleSidebar"
+      @toggleSidebar="$emit('toggleSidebar')"
       @deleteConversation="deleteConversation"
     />
     <ChatMessages :messages="currentConversation?.messages || []" />
@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import axios from 'axios'
 import ChatHeader from './ChatHeader.vue'
 import ChatMessages from './ChatMessages.vue'
@@ -25,9 +25,6 @@ const userStore = useUserStore()
 // Get conversation data from the store
 const conversationStore = useConversationStore()
 const currentConversation = computed(() => conversationStore.currentConversation)
-
-// Sidebar visibility state
-const isSidebarVisible = ref(true)
 
 // Backend API URL
 const BACKEND_API_URL = 'http://127.0.0.1:8000/api/generate/'
@@ -71,11 +68,6 @@ const sendMessage = async (message) => {
       sender: 'ai',
     })
   }
-}
-
-// Handle toggling the sidebar
-const toggleSidebar = () => {
-  isSidebarVisible.value = !isSidebarVisible.value
 }
 
 // Handle deleting the current conversation
