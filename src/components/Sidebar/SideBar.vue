@@ -120,6 +120,11 @@
         <q-btn color="accent" flat unelevated icon="sym_o_settings_b_roll" aria-label="Settings">
           <q-tooltip> Settings </q-tooltip>
         </q-btn>
+
+        <q-btn color="accent" flat unelevated icon="sym_o_id_card" aria-label="Account">
+          <q-tooltip> Account </q-tooltip>
+        </q-btn>
+
         <q-btn
           color="accent"
           flat

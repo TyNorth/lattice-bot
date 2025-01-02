@@ -181,7 +181,7 @@ const sendSuggestion = (suggestion) => {
   sendMessage(suggestion)
 }
 
-// Similarity search for relevant memories
+/* Similarity search for relevant memories
 const fetchSimilarMemories = async (query) => {
   try {
     const response = await axios.post('http://127.0.0.1:8000/api/retrieve_similar_memories/', {
@@ -195,7 +195,7 @@ const fetchSimilarMemories = async (query) => {
     return []
   }
 }
-
+*/
 // Enhanced message sending with memory retrieval
 const sendMessage = async (message) => {
   console.log('message', message)

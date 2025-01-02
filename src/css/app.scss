@@ -1,32 +1,47 @@
-// app global css in SCSS form
-/* Scrollbar Styles */
+/* Global Scrollbar Styles */
 ::-webkit-scrollbar {
-  width: 10px; /* Width of the scrollbar */
-  height: 10px; /* Height for horizontal scrollbars */
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #2c3e50; /* Primary color for scrollbar thumb */
-  border-radius: 10px; /* Rounded edges for a sleek look */
-  border: 2px solid #1a1a1a; /* Darker border for a refined look */
+  background-color: var(--scrollbar-thumb);
+  border-radius: 10px;
+  border: 2px solid var(--scrollbar-track);
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #1a1a1a; /* Dark page background color for track */
-  border-radius: 10px; /* Match thumb radius */
+  background-color: var(--scrollbar-track);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #8e44ad; /* Accent color for hover state */
+  background-color: var(--scrollbar-thumb-hover);
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background-color: #7f8c8d; /* Secondary color for active state */
+  background-color: var(--scrollbar-thumb-active);
 }
+
 /* For Firefox */
 * {
-  scrollbar-width: thin; /* Thin scrollbar for a sleek design */
-  scrollbar-color: #2c3e50 #1a1a1a; /* Thumb and track colors */
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* Theme Variables */
+:root {
+  --scrollbar-thumb: #b0bec5; /* Default light theme color */
+  --scrollbar-track: #eceff1;
+  --scrollbar-thumb-hover: #607d8b;
+  --scrollbar-thumb-active: #455a64;
+}
+
+body[data-theme='dark'] {
+  --scrollbar-thumb: #2c3e50;
+  --scrollbar-track: #1a1a1a;
+  --scrollbar-thumb-hover: #8e44ad;
+  --scrollbar-thumb-active: #7f8c8d;
 }
 
 @mixin apply-border-radius($radius) {
