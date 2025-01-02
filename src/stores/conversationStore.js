@@ -3,12 +3,15 @@ import {
   getUserConversations,
   createConversation,
   deleteConversation,
+  updateConversation,
 } from 'src/database/conversations'
 import { addMessageToConversation, getMessagesForConversation } from 'src/database/messages' // Add appropriate database methods
 
 export const useConversationStore = defineStore('conversation', {
   state: () => ({
     conversations: [], // List of all conversations
+    messages: {}, // Cache messages for each conversation
+
     currentConversation: null, // The currently active conversation
   }),
 
@@ -46,6 +49,26 @@ export const useConversationStore = defineStore('conversation', {
       }
     },
 
+    // Update a conversation's details
+    async updateConversation(conversationId, updatedFields) {
+      try {
+        const updatedConversation = await updateConversation(conversationId, updatedFields)
+
+        // Update the conversation in the local state
+        const conversationIndex = this.conversations.findIndex((conv) => conv.id === conversationId)
+        if (conversationIndex !== -1) {
+          this.conversations[conversationIndex] = updatedConversation
+        }
+
+        // If the current conversation is the one updated, reflect the changes
+        if (this.currentConversation?.id === conversationId) {
+          this.currentConversation = { ...this.currentConversation, ...updatedFields }
+        }
+      } catch (error) {
+        console.error('Error updating conversation:', error)
+      }
+    },
+
     // Set the current conversation and fetch its messages
     async setCurrentConversation(conversationId) {
       const selectedConversation = this.conversations.find((conv) => conv.id === conversationId)
@@ -75,6 +98,20 @@ export const useConversationStore = defineStore('conversation', {
       } catch (error) {
         console.error('Error adding message to conversation:', error)
       }
+    },
+    async fetchMessagesForConversation(conversationId) {
+      if (!this.messages[conversationId]) {
+        try {
+          const messages = await getMessagesForConversation(conversationId)
+          this.messages[conversationId] = messages.map((msg) => ({
+            ...msg,
+            text: JSON.parse(msg.text).text, // Parse message text from JSON
+          }))
+        } catch (error) {
+          console.error('Error fetching messages for conversation:', error)
+        }
+      }
+      return this.messages[conversationId]
     },
   },
 })

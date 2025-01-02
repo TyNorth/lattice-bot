@@ -1,8 +1,22 @@
 <template>
   <div class="chat-header">
-    <q-btn flat icon="sym_o_menu" @click="$emit('toggleSidebar')" color="negative" />
+    <q-btn
+      flat
+      icon="sym_o_menu"
+      @click="$emit('toggleSidebar')"
+      color="accent"
+      aria-label="Toggle Sidebar"
+      ><q-tooltip> Toogle Sidebar </q-tooltip>
+    </q-btn>
     <h1>{{ title }}</h1>
-    <q-btn flat icon="sym_o_delete" @click="$emit('deleteConversation')" color="negative" />
+    <q-btn
+      aria-label="Delete Conversation"
+      flat
+      icon="sym_o_delete_forever"
+      @click="$emit('deleteConversation')"
+      color="negative"
+      ><q-tooltip> Delete Conversation </q-tooltip>
+    </q-btn>
   </div>
 </template>
 
@@ -17,9 +31,8 @@ defineProps({
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
   background-color: var(--q-surface);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(1, 60, 119, 0.116);
 }
 
 .sym_o_menu {

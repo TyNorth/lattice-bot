@@ -1,1 +1,109 @@
 // app global css in SCSS form
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 10px; /* Width of the scrollbar */
+  height: 10px; /* Height for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #2c3e50; /* Primary color for scrollbar thumb */
+  border-radius: 10px; /* Rounded edges for a sleek look */
+  border: 2px solid #1a1a1a; /* Darker border for a refined look */
+}
+
+::-webkit-scrollbar-track {
+  background-color: #1a1a1a; /* Dark page background color for track */
+  border-radius: 10px; /* Match thumb radius */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #8e44ad; /* Accent color for hover state */
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: #7f8c8d; /* Secondary color for active state */
+}
+/* For Firefox */
+* {
+  scrollbar-width: thin; /* Thin scrollbar for a sleek design */
+  scrollbar-color: #2c3e50 #1a1a1a; /* Thumb and track colors */
+}
+
+@mixin apply-border-radius($radius) {
+  border-radius: $radius;
+}
+
+/* Example Usage */
+.card {
+  @include apply-border-radius($radius-medium);
+}
+
+.button {
+  @include apply-border-radius($radius-pill);
+}
+
+.input {
+  @include apply-border-radius($radius-small);
+}
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('src/css/fonts/Outfit/Outfit-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900; /* Supports variable weights from 100 to 900 */
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-primary: 'Outfit', sans-serif; /* Declare the primary font */
+}
+
+/* Apply globally */
+body {
+  font-family: var(--font-primary);
+  font-weight: 400; /* Default weight */
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+  color: var(--q-text-primary);
+}
+
+/* Optional: Custom font styles */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-primary);
+  font-weight: 700; /* Bold for headings */
+}
+
+p {
+  font-family: var(--font-primary);
+  font-weight: 400; /* Normal weight for paragraphs */
+}
+
+button,
+input,
+textarea {
+  font-family: var(--font-primary);
+  font-weight: 500; /* Slightly bold for interactive elements */
+}
+
+/* Global QTooltip styling */
+.q-tooltip {
+  background-color: var(--q-surface); /* Matches the app's surface color */
+  color: var(--q-text-primary); /* Matches primary text color */
+  font-family: var(--font-primary); /* Consistent font */
+  font-size: 0.875rem; /* Slightly smaller font size for tooltips */
+  border-radius: 0.5rem; /* Modern curved border */
+  padding: 0.5rem 1rem; /* Comfortable padding */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15); /* Subtle shadow */
+  transition: all 0.3s ease-in-out; /* Smooth transition for appearance */
+}
+
+/* Arrow styling for QTooltip */
+.q-tooltip .q-tooltip-arrow {
+  border-color: var(--q-surface); /* Matches tooltip background */
+}

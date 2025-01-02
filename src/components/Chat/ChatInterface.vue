@@ -50,7 +50,11 @@
       </div>
     </div>
 
-    <ChatMessages v-else :messages="currentConversation?.messages || []" />
+    <ChatMessages
+      v-else
+      :messages="currentConversation?.messages || []"
+      :conversationId="currentConversation.id"
+    />
     <ChatInput @sendMessage="sendMessage" />
     <!-- Context Menu -->
     <div v-if="showContextMenu" :style="contextMenuPosition" class="context-menu">

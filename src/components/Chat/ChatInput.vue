@@ -1,6 +1,7 @@
 <template>
   <div class="chat-input">
     <q-input
+      rounded
       v-model="message"
       placeholder="Type your message..."
       outlined
@@ -9,7 +10,7 @@
       class="input-box"
       @keyup.enter="handleSend"
     />
-    <q-btn flat icon="sym_o_send" @click="handleSend" color="primary" class="send-btn" />
+    <q-btn flat icon="sym_o_send" @click="handleSend" color="accent" class="send-btn" />
   </div>
 </template>
 

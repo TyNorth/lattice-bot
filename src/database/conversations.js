@@ -22,6 +22,19 @@ export const createConversation = async (userId, title = 'Untitled Conversation'
   return data
 }
 
+// Update a conversation
+export const updateConversation = async (conversationId, updatedFields) => {
+  const { data, error } = await supabase
+    .from('conversations')
+    .update(updatedFields)
+    .eq('id', conversationId)
+    .select()
+    .single()
+
+  if (error) throw new Error(error.message)
+  return data
+}
+
 export const deleteConversation = async (conversationId) => {
   const { data, error } = await supabase.from('conversations').delete().eq('id', conversationId)
 

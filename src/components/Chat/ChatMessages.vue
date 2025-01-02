@@ -1,15 +1,24 @@
 <template>
   <div class="chat-messages">
-    <MessageBubble v-for="(message, index) in messages" :key="index" :message="message.text" />
+    <MessageBubble
+      v-for="(message, index) in messages"
+      :key="index"
+      :message="message.text"
+      :conversationId="props.conversationId"
+    />
   </div>
 </template>
 
 <script setup>
 import MessageBubble from './MessageBubble.vue'
 
-defineProps({
+const props = defineProps({
   messages: {
     type: Array,
+    required: true,
+  },
+  conversationId: {
+    type: String,
     required: true,
   },
 })

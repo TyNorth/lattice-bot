@@ -11,15 +11,33 @@
 // It's highly recommended to change the default colors
 // to match your app's branding.
 // Tip: Use the "Theme Builder" on Quasar's documentation website.
+$primary: #013c77; // Elegant dark blue-gray for primary actions
+$secondary: #7f8c8d; // Subtle gray for secondary elements
+$accent: #d35400; // Deep muted purple for accents
 
-$primary   : #1976D2;
-$secondary : #26A69A;
-$accent    : #9C27B0;
+$dark: #2b2b2b; // Soft black for text and key dark elements
+$dark-page: #1a1a1a; // Slightly darker for page background
 
-$dark      : #1D1D1D;
-$dark-page : #121212;
+$positive: #27ae60; // Muted emerald green for positive actions
+$negative: #e74c3c; // Soft crimson for errors
+$info: #3498db; // Calm blue for informational elements
+$warning: #f39c12; // Muted amber for warnings
 
-$positive  : #21BA45;
-$negative  : #C10015;
-$info      : #31CCEC;
-$warning   : #F2C037;
+/* Border Radius Variables */
+$radius-small: 8px; /* Subtle rounding */
+$radius-medium: 12px; /* Default for most elements */
+$radius-large: 16px; /* Strong rounding for larger elements */
+$radius-pill: 9999px; /* Full pill/rounded for buttons or chips */
+
+// Quasar Theme Customization
+$border-radius-small: $radius-small;
+$border-radius-medium: $radius-medium;
+$border-radius-large: $radius-large;
+
+/* Adjust default radius globally */
+$border-radius-base: $radius-medium; /* Default radius for all components */
+
+/* Customize specific components */
+$button-border-radius: $radius-pill; /* Buttons */
+$chip-border-radius: $radius-pill; /* Chips */
+$dialog-border-radius: $radius-large; /* Dialogs */

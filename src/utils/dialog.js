@@ -15,7 +15,7 @@ export const showConfirmDialog = ({ title, message }) => {
       ok: {
         label: 'OK',
         flat: true,
-        color: 'primary',
+        color: 'accent',
       },
       cancel: {
         label: 'Cancel',
