@@ -74,8 +74,10 @@ import { useUserStore } from 'src/stores/userStore'
 import { showConfirmDialog } from 'src/utils/dialog'
 import { notifySuccess } from 'src/utils/notify'
 import { useMemoryStore } from 'src/stores/memoryStore'
+import { useInstructionStore } from 'src/stores/instructionStore'
 
 const memoryStore = useMemoryStore()
+const instructionStore = useInstructionStore()
 
 // Predefined lists of topics and problems
 const topics = [
@@ -203,7 +205,7 @@ const sendMessage = async (message) => {
 
   const userMessage = { text: message, sender: 'user' }
   await conversationStore.addMessage(currentConversation.value.id, userMessage)
-
+  const specialInstructions = instructionStore.instructions
   // Fetch similar memories
   //const similarMemories = await fetchSimilarMemories(message)
   //const memoryContext = similarMemories.map((mem) => mem.content).join('\n')
@@ -212,6 +214,7 @@ const sendMessage = async (message) => {
   const payload = {
     message,
     context: `${memoryContext}\n${currentConversation.value.messages.map((msg) => msg.text).join('\n')}`,
+    specialInstructions,
   }
 
   try {
@@ -249,8 +252,13 @@ const deleteConversation = async () => {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   document.addEventListener('mouseup', handleTextSelection)
+  try {
+    await instructionStore.fetchInstructions(userStore.user.id)
+  } catch (e) {
+    console.log('error fetching instructions', e)
+  }
 })
 </script>
 

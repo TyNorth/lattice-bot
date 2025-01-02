@@ -9,6 +9,7 @@
       clearable
       class="input-box"
       @keyup.enter="handleSend"
+      clear-icon="sym_o_clear"
     />
     <q-btn flat icon="sym_o_send" @click="handleSend" color="accent" class="send-btn" />
   </div>
@@ -38,6 +39,7 @@ const handleSend = () => {
   padding: 1rem;
   background-color: var(--q-surface);
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
 .input-box {

@@ -6,6 +6,7 @@ export const getUserInstructions = async (userId) => {
     .select('*')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
+    .single()
 
   if (error) throw new Error(error.message)
   return data
@@ -24,6 +25,18 @@ export const addInstruction = async (userId, content) => {
 
 export const deleteInstruction = async (instructionId) => {
   const { data, error } = await supabase.from('instructions').delete().eq('id', instructionId)
+
+  if (error) throw new Error(error.message)
+  return data
+}
+
+export const updateInstruction = async (instructionId, content) => {
+  const { data, error } = await supabase
+    .from('instructions')
+    .update({ content })
+    .eq('id', instructionId)
+    .select()
+    .single()
 
   if (error) throw new Error(error.message)
   return data

@@ -1,21 +1,33 @@
 import { defineStore } from 'pinia'
-import { getUserInstructions, addInstruction, deleteInstruction } from 'src/database/instructions'
+import {
+  getUserInstructions,
+  addInstruction,
+  deleteInstruction,
+  updateInstruction,
+} from 'src/database/instructions'
 
 export const useInstructionStore = defineStore('instruction', {
   state: () => ({
-    instructions: [],
+    instructions: {},
+    instructionId: null,
   }),
   actions: {
     async fetchInstructions(userId) {
       this.instructions = await getUserInstructions(userId)
+      this.instructionId = this.instructions.id
     },
     async addInstruction(userId, content) {
       const newInstruction = await addInstruction(userId, content)
-      this.instructions.unshift(newInstruction)
+      this.instructions = newInstruction
+      this.instructionId = this.instructions.id
     },
     async deleteInstruction(instructionId) {
       await deleteInstruction(instructionId)
-      this.instructions = this.instructions.filter((inst) => inst.id !== instructionId)
+      this.instructions = {}
+    },
+    async updateInstruction(instructionId, content) {
+      this.instructions = await updateInstruction(instructionId, content)
+      this.instructionId = this.instructions.id
     },
   },
 })

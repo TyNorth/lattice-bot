@@ -33,6 +33,7 @@ defineProps({
   justify-content: space-between;
   background-color: var(--q-surface);
   box-shadow: 0 2px 4px rgba(1, 60, 119, 0.116);
+  border-radius: 8px;
 }
 
 .sym_o_menu {

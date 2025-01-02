@@ -79,20 +79,20 @@
       </q-item>
     </div>
 
-    <!-- Settings -->
+    <!-- Instructions -->
     <div class="settings">
       <div class="settings-header">
-        <h2>Settings</h2>
+        <h2>Instructions</h2>
         <q-btn
           no-caps
-          icon="sym_o_settings_b_roll"
+          icon="sym_o_psychology"
           unelevated
           flat
           color="accent"
-          aria-label="Adjust Settings"
-          @click="openSettingsDialog"
+          aria-label="Edit Instructions"
+          @click="openInstructionsDialog"
           class="edit-memory-btn"
-          ><q-tooltip> Adjust Settings </q-tooltip>
+          ><q-tooltip> Edit Instructions </q-tooltip>
         </q-btn>
       </div>
     </div>
@@ -113,6 +113,26 @@
           ><q-tooltip> Edit Memories </q-tooltip>
         </q-btn>
       </div>
+    </div>
+
+    <div class="settings-bar">
+      <q-btn-group spread unelevated flat>
+        <q-btn color="accent" flat unelevated icon="sym_o_settings_b_roll" aria-label="Settings">
+          <q-tooltip> Settings </q-tooltip>
+        </q-btn>
+        <q-btn
+          color="accent"
+          flat
+          unelevated
+          aria-label="Toggle Light/Dark Mode"
+          :icon="$q.dark.isActive ? 'sym_o_dark_mode' : 'sym_o_light_mode'"
+          @click="$q.dark.toggle"
+        >
+          <q-tooltip>
+            {{ $q.dark.isActive ? 'Light Mode ->' : 'Dark Mode ->' }}
+          </q-tooltip>
+        </q-btn>
+      </q-btn-group>
     </div>
 
     <!-- Memory Dialog -->
@@ -189,8 +209,8 @@
     </q-card>
   </q-dialog>
 
-  <!-- Settings Dialog -->
-  <q-dialog v-model="showSettingsDialog" persistent>
+  <!-- Instructions Dialog -->
+  <q-dialog v-model="showInstructionsDialog" persistent>
     <q-card class="settings-dialog">
       <q-card-section class="settings-header">
         <h3>Special Instructions</h3>
@@ -207,7 +227,12 @@
       </q-card-section>
       <q-card-actions align="right" class="settings-actions">
         <q-btn flat label="Cancel" @click="closeSettingsDialog" />
-        <q-btn flat label="Save" color="accent" @click="saveSpecialInstructions" />
+        <q-btn
+          flat
+          label="Save"
+          color="accent"
+          @click="saveSpecialInstructions(specialInstructions)"
+        />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -218,49 +243,56 @@ import { computed, ref, onMounted, watch } from 'vue'
 import { useConversationStore } from 'src/stores/conversationStore'
 import { useUserStore } from 'src/stores/userStore'
 import { useMemoryStore } from 'src/stores/memoryStore'
+import { useInstructionStore } from 'src/stores/instructionStore'
 import { notifySuccess, notifyError } from 'src/utils/notify'
 // Get the conversation store
 const conversationStore = useConversationStore()
 const memoryStore = useMemoryStore()
 const userStore = useUserStore()
+const instructionStore = useInstructionStore()
 const userId = ref()
 const searchQuery = ref('') // Holds the search input
 const filteredConversations = ref([])
 let query
 
-const showSettingsDialog = ref(false)
-const specialInstructions = ref('') // Holds the special instructions
+const showInstructionsDialog = ref(false)
 
 // Open the settings dialog
-const openSettingsDialog = () => {
-  loadSpecialInstructions() // Load current instructions before opening
-  showSettingsDialog.value = true
+const openInstructionsDialog = () => {
+  showInstructionsDialog.value = true
 }
 
 // Close the settings dialog
 const closeSettingsDialog = () => {
-  showSettingsDialog.value = false
-}
-
-// Load the current special instructions (stub for now)
-const loadSpecialInstructions = () => {
-  // Fetch instructions from storage or API
-  // Example: Fetch from localStorage for now
-  specialInstructions.value = localStorage.getItem('specialInstructions') || ''
+  showInstructionsDialog.value = false
 }
 
 // Save the special instructions
-const saveSpecialInstructions = () => {
+// Save the special instructions
+const saveSpecialInstructions = async (content) => {
   try {
-    // Save instructions to storage or API
-    // Example: Save to localStorage for now
-    localStorage.setItem('specialInstructions', specialInstructions.value)
-    notifySuccess('Special instructions saved successfully!')
+    // Fetch current instructions to determine if they exist
+    console.log(instructionStore.instructions)
+    console.log(instructionStore.instructionId)
+    const currentInstructionsId = instructionStore.instructionId
+    console.log(currentInstructionsId)
+
+    if (currentInstructionsId) {
+      await instructionStore.updateInstruction(currentInstructionsId, content)
+      notifySuccess('Special instructions updated successfully!')
+    } else {
+      // Create new instructions if none exist
+      await instructionStore.addInstruction(userId.value, content)
+      notifySuccess('Special instructions saved successfully!')
+    }
+
     closeSettingsDialog()
   } catch (error) {
-    notifyError('Failed to save special instructions.', error)
+    console.error('Error saving special instructions:', error)
+    notifyError('Failed to save special instructions.')
   }
 }
+
 // Watch search query and dynamically update the filtered list
 const onSearchInput = async () => {
   if (searchQuery.value) {
@@ -309,9 +341,6 @@ const onSearchInput = async () => {
   // Remove nulls from results and update the list
   filteredConversations.value = results.filter((conversation) => conversation)
 }
-
-// Fetch conversations on mounted
-onMounted(() => {})
 
 // Dialog states
 const showRenameDialog = ref(false)
@@ -378,7 +407,6 @@ const deleteConversation = async () => {
 
 // Reactive data for conversations and the current conversation
 const conversations = computed(() => conversationStore.conversations)
-console.log(conversations.value)
 const currentConversation = computed(() => conversationStore.currentConversation)
 
 // memory
@@ -441,6 +469,7 @@ onMounted(async () => {
   userId.value = userStore.getUser.id
   await conversationStore.fetchConversations(userId.value)
   filteredConversations.value = conversationStore.conversations // Default to all conversations
+  await instructionStore.fetchInstructions(userId.value)
 })
 
 watch(searchQuery, onSearchInput)
@@ -709,15 +738,10 @@ watch(
 }
 
 .settings-header {
-  padding: 1rem;
   background-color: var(--q-primary-light);
   color: var(--q-primary);
   border-bottom: 1px solid var(--q-divider);
   text-align: center;
-}
-
-.settings-body {
-  padding: 1rem;
 }
 
 .special-instructions-input {
