@@ -205,9 +205,9 @@ const sendMessage = async (message) => {
   await conversationStore.addMessage(currentConversation.value.id, userMessage)
 
   // Fetch similar memories
-  const similarMemories = await fetchSimilarMemories(message)
-  const memoryContext = similarMemories.map((mem) => mem.content).join('\n')
-
+  //const similarMemories = await fetchSimilarMemories(message)
+  //const memoryContext = similarMemories.map((mem) => mem.content).join('\n')
+  const memoryContext = ''
   // Backend payload
   const payload = {
     message,

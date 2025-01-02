@@ -8,7 +8,7 @@
         color="accent"
         @click="startNewConversation"
         aria-label="New"
-        class="new-conversation-btn"
+        class="edit-memory-btn"
         ><q-tooltip> New Conversation </q-tooltip>
       </q-btn>
     </div>
@@ -77,6 +77,24 @@
           </q-btn>
         </q-item-section>
       </q-item>
+    </div>
+
+    <!-- Settings -->
+    <div class="settings">
+      <div class="settings-header">
+        <h2>Settings</h2>
+        <q-btn
+          no-caps
+          icon="sym_o_settings_b_roll"
+          unelevated
+          flat
+          color="accent"
+          aria-label="Adjust Settings"
+          @click="openSettingsDialog"
+          class="edit-memory-btn"
+          ><q-tooltip> Adjust Settings </q-tooltip>
+        </q-btn>
+      </div>
     </div>
 
     <!-- Memory Management Section -->
@@ -170,6 +188,29 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
+
+  <!-- Settings Dialog -->
+  <q-dialog v-model="showSettingsDialog" persistent>
+    <q-card class="settings-dialog">
+      <q-card-section class="settings-header">
+        <h3>Special Instructions</h3>
+      </q-card-section>
+      <q-card-section class="settings-body">
+        <q-input
+          v-model="specialInstructions"
+          type="textarea"
+          class="special-instructions-input"
+          rows="10"
+          outlined
+          placeholder="Enter your special instructions here..."
+        />
+      </q-card-section>
+      <q-card-actions align="right" class="settings-actions">
+        <q-btn flat label="Cancel" @click="closeSettingsDialog" />
+        <q-btn flat label="Save" color="accent" @click="saveSpecialInstructions" />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup>
@@ -186,6 +227,40 @@ const userId = ref()
 const searchQuery = ref('') // Holds the search input
 const filteredConversations = ref([])
 let query
+
+const showSettingsDialog = ref(false)
+const specialInstructions = ref('') // Holds the special instructions
+
+// Open the settings dialog
+const openSettingsDialog = () => {
+  loadSpecialInstructions() // Load current instructions before opening
+  showSettingsDialog.value = true
+}
+
+// Close the settings dialog
+const closeSettingsDialog = () => {
+  showSettingsDialog.value = false
+}
+
+// Load the current special instructions (stub for now)
+const loadSpecialInstructions = () => {
+  // Fetch instructions from storage or API
+  // Example: Fetch from localStorage for now
+  specialInstructions.value = localStorage.getItem('specialInstructions') || ''
+}
+
+// Save the special instructions
+const saveSpecialInstructions = () => {
+  try {
+    // Save instructions to storage or API
+    // Example: Save to localStorage for now
+    localStorage.setItem('specialInstructions', specialInstructions.value)
+    notifySuccess('Special instructions saved successfully!')
+    closeSettingsDialog()
+  } catch (error) {
+    notifyError('Failed to save special instructions.', error)
+  }
+}
 // Watch search query and dynamically update the filtered list
 const onSearchInput = async () => {
   if (searchQuery.value) {
@@ -369,6 +444,13 @@ onMounted(async () => {
 })
 
 watch(searchQuery, onSearchInput)
+
+// Watch the conversation list to reapply filters when it changes
+watch(
+  () => conversationStore.conversations,
+  () => onSearchInput(),
+  { deep: true },
+)
 </script>
 
 <style scoped lang="scss">
@@ -392,6 +474,10 @@ watch(searchQuery, onSearchInput)
     h2 {
       margin: 0;
       font-size: 1.2rem;
+    }
+
+    .edit-memory-btn {
+      margin-left: 0.8rem; /* Adds spacing between the button and heading */
     }
   }
 
@@ -452,7 +538,7 @@ watch(searchQuery, onSearchInput)
     }
 
     .edit-memory-btn {
-      margin-left: 0.5rem; /* Adds spacing between the button and heading */
+      margin-left: 0.8rem; /* Adds spacing between the button and heading */
     }
   }
 }
@@ -467,16 +553,6 @@ watch(searchQuery, onSearchInput)
   border-radius: 16px; /* Rounded edges for a modern design */
   box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
   overflow: hidden;
-}
-
-.memory-header {
-  background-color: var(--q-primary-light);
-  color: var(--q-primary);
-  padding: 1rem;
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-  border-bottom: 1px solid var(--q-divider);
 }
 
 .memory-content {
@@ -601,5 +677,55 @@ watch(searchQuery, onSearchInput)
   background-color: var(--q-hover);
   border-radius: 4px;
   padding: 2px 4px;
+}
+
+.settings {
+  padding: 1rem;
+  background-color: var(--q-surface);
+  color: var(--q-primary);
+
+  .settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center; /* Ensures alignment with the button */
+    }
+
+    .edit-memory-btn {
+      margin-left: 0.5rem; /* Adds spacing between the button and heading */
+    }
+  }
+}
+
+.settings-dialog {
+  max-width: 600px;
+  width: 100%;
+}
+
+.settings-header {
+  padding: 1rem;
+  background-color: var(--q-primary-light);
+  color: var(--q-primary);
+  border-bottom: 1px solid var(--q-divider);
+  text-align: center;
+}
+
+.settings-body {
+  padding: 1rem;
+}
+
+.special-instructions-input {
+  width: 100%;
+}
+
+.settings-actions {
+  padding: 0.5rem 1rem;
+  border-top: 1px solid var(--q-divider);
 }
 </style>
