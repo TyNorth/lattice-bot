@@ -200,20 +200,12 @@ $dark-mode-bg: #121212; // Dark mode background
   text-transform: uppercase;
   background: $primary-color;
   color: #fff;
-
-  &:hover {
-    background: darken($primary-color, 10%);
-  }
 }
 
 .forgot-password-btn {
   margin-top: 1rem;
   font-size: 0.85rem;
   color: $secondary-color;
-
-  &:hover {
-    color: lighten($secondary-color, 20%);
-  }
 }
 
 .agreement {

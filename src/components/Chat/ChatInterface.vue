@@ -65,7 +65,7 @@
 
 <script setup>
 import { computed, ref, onMounted } from 'vue'
-import axios from 'axios'
+import api from 'api'
 import ChatHeader from './ChatHeader.vue'
 import ChatMessages from './ChatMessages.vue'
 import ChatInput from './ChatInput.vue'
@@ -144,7 +144,7 @@ const saveHighlightedText = async () => {
 // Compute embeddings for text (connect to backend API)
 const computeEmbedding = async (text) => {
   try {
-    const response = await axios.post('http://127.0.0.1:8000/api/compute_embedding/', { text })
+    const response = await api.post('api/compute_embedding/', { text })
     return response.data.embedding
   } catch (error) {
     console.error('Error computing embedding:', error)
@@ -173,9 +173,6 @@ const hasMessages = computed(() => {
   return currentConversation.value?.messages?.length > 0
 })
 
-// Backend API URL
-const BACKEND_API_URL = 'http://127.0.0.1:8000/api/generate/'
-
 // Handle sending a suggestion
 const sendSuggestion = (suggestion) => {
   sendMessage(suggestion)
@@ -184,7 +181,7 @@ const sendSuggestion = (suggestion) => {
 /* Similarity search for relevant memories
 const fetchSimilarMemories = async (query) => {
   try {
-    const response = await axios.post('http://127.0.0.1:8000/api/retrieve_similar_memories/', {
+    const response = await api.post('api/retrieve_similar_memories/', {
       conversation_id: currentConversation.value.id,
       query_embedding: computeEmbedding(query),
     })
@@ -218,7 +215,12 @@ const sendMessage = async (message) => {
   }
 
   try {
-    const response = await axios.post(BACKEND_API_URL, payload)
+    const response = await api.post(
+      process.env.NODE_ENV === 'production'
+        ? `${process.env.PROD_SERVER_URL}/api/generate/`
+        : `${process.env.DEV_SERVER_URL}/api/generate/`,
+      payload,
+    )
     const aiMessage = {
       text: response.data?.choices?.[0]?.message?.content || 'Error in response',
       sender: 'ai',

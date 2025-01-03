@@ -31,7 +31,7 @@
 import { useMemoryStore } from 'src/stores/memoryStore'
 import { notifyError, notifySuccess } from 'src/utils/notify'
 import { computed } from 'vue'
-import { axios } from 'src/boot/axios'
+import { api } from 'src/boot/api'
 
 const memoryStore = useMemoryStore()
 const props = defineProps({
@@ -91,7 +91,7 @@ const copyMessage = () => {
 
 const computeEmbedding = async (text) => {
   try {
-    const response = await axios.post('http://127.0.0.1:8000/api/compute_embedding/', { text })
+    const response = await api.post('api/compute_embedding/', { text })
     return response.data.embedding
   } catch (error) {
     console.error('Error computing embedding:', error)
