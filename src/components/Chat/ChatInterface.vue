@@ -75,6 +75,7 @@ import { showConfirmDialog } from 'src/utils/dialog'
 import { notifySuccess } from 'src/utils/notify'
 import { useMemoryStore } from 'src/stores/memoryStore'
 import { useInstructionStore } from 'src/stores/instructionStore'
+import { supabase } from 'src/boot/supabase'
 
 const memoryStore = useMemoryStore()
 const instructionStore = useInstructionStore()
@@ -178,21 +179,24 @@ const sendSuggestion = (suggestion) => {
   sendMessage(suggestion)
 }
 
-/* Similarity search for relevant memories
+//Similarity search for relevant memories
 const fetchSimilarMemories = async (query) => {
   try {
-    const response = await api.post('api/retrieve_similar_memories/', {
+    let { data, error } = await supabase.rpc('search_embeddings', {
       conversation_id: currentConversation.value.id,
       query_embedding: computeEmbedding(query),
+      similarity_threshold: 85,
     })
+    if (error) console.error(error)
+    else console.log(data)
 
-    return response.data || []
+    return data || []
   } catch (error) {
     console.error('Error fetching similar memories:', error)
     return []
   }
 }
-*/
+
 // Enhanced message sending with memory retrieval
 const sendMessage = async (message) => {
   console.log('message', message)
@@ -204,9 +208,9 @@ const sendMessage = async (message) => {
   await conversationStore.addMessage(currentConversation.value.id, userMessage)
   const specialInstructions = instructionStore.instructions
   // Fetch similar memories
-  //const similarMemories = await fetchSimilarMemories(message)
-  //const memoryContext = similarMemories.map((mem) => mem.content).join('\n')
-  const memoryContext = ''
+  const similarMemories = await fetchSimilarMemories(message)
+  const memoryContext = similarMemories.map((mem) => mem.content).join('\n')
+  //const memoryContext = ''
   // Backend payload
   const payload = {
     message,
