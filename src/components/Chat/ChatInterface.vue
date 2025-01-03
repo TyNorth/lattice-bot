@@ -7,7 +7,11 @@
     />
 
     <div v-if="!hasMessages" class="empty-state">
-      <img src="src/assets/latticebot.png" alt="Start a conversation" class="illustration" />
+      <img
+        src="https://knjpwwuewkowihstqirm.supabase.co/storage/v1/object/sign/brand/latticebot.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJicmFuZC9sYXR0aWNlYm90LnBuZyIsImlhdCI6MTczNTg2OTcyNCwiZXhwIjoxNzY3NDA1NzI0fQ.7KWL4-H01dIFMbXoO6uHGjT2t6Ly0irY-ujB5vr8cBM&t=2025-01-03T02%3A02%3A03.755Z"
+        alt="Start a conversation"
+        class="illustration"
+      />
       <h2 class="empty-title">Start Your Conversation</h2>
       <p class="empty-description">
         This space is waiting for your words. Begin by asking a question, exploring an idea, or

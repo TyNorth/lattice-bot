@@ -2,7 +2,11 @@
   <div class="login-page">
     <div class="login-container">
       <div class="login-box">
-        <img src="src/assets/latticebot.png" alt="MindLink AI Logo" class="logo" />
+        <img
+          src="https://knjpwwuewkowihstqirm.supabase.co/storage/v1/object/sign/brand/latticebot.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJicmFuZC9sYXR0aWNlYm90LnBuZyIsImlhdCI6MTczNTg2OTcyNCwiZXhwIjoxNzY3NDA1NzI0fQ.7KWL4-H01dIFMbXoO6uHGjT2t6Ly0irY-ujB5vr8cBM&t=2025-01-03T02%3A02%3A03.755Z"
+          alt="Lattice Bot Logo"
+          class="logo"
+        />
         <h1 class="title">Lattice Bot</h1>
         <p class="subtitle">
           Streamline your conversations with intelligent memory and multi-faceted AI capabilities.
@@ -132,8 +136,8 @@ const handleForgotPassword = async () => {
 </script>
 
 <style lang="scss" scoped>
-$primary-color: #4caf50; // Primary brand color
-$secondary-color: #9e9e9e; // Secondary color for accents
+$primary-color: #013c77; // Primary brand color
+$secondary-color: #d35400; // Secondary color for accents
 $text-color: #212121; // Main text color
 $background-color: #f5f5f5; // Light background
 $dark-mode-bg: #121212; // Dark mode background
