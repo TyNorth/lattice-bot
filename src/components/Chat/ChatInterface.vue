@@ -65,7 +65,7 @@
 
 <script setup>
 import { computed, ref, onMounted } from 'vue'
-import api from 'api'
+import api from 'axios'
 import ChatHeader from './ChatHeader.vue'
 import ChatMessages from './ChatMessages.vue'
 import ChatInput from './ChatInput.vue'

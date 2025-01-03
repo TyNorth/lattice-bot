@@ -31,7 +31,7 @@
 import { useMemoryStore } from 'src/stores/memoryStore'
 import { notifyError, notifySuccess } from 'src/utils/notify'
 import { computed } from 'vue'
-import { api } from 'src/boot/api'
+import { api } from 'src/boot/axios'
 
 const memoryStore = useMemoryStore()
 const props = defineProps({
