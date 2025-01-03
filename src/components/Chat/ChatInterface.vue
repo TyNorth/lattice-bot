@@ -7,11 +7,7 @@
     />
 
     <div v-if="!hasMessages" class="empty-state">
-      <img
-        src="/assets/empty-state-illustration.svg"
-        alt="Start a conversation"
-        class="illustration"
-      />
+      <img src="src/assets/latticebot.png" alt="Start a conversation" class="illustration" />
       <h2 class="empty-title">Start Your Conversation</h2>
       <p class="empty-description">
         This space is waiting for your words. Begin by asking a question, exploring an idea, or

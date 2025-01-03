@@ -2,9 +2,11 @@
   <div class="login-page">
     <div class="login-container">
       <div class="login-box">
-        <img src="/logo.png" alt="MindLink AI Logo" class="logo" />
-        <h1 class="title">MindLink AI</h1>
-        <p class="subtitle">Streamline your conversations with intelligent memory.</p>
+        <img src="src/assets/latticebot.png" alt="MindLink AI Logo" class="logo" />
+        <h1 class="title">Lattice Bot</h1>
+        <p class="subtitle">
+          Streamline your conversations with intelligent memory and multi-faceted AI capabilities.
+        </p>
 
         <q-form @submit="handleLogin">
           <q-input
