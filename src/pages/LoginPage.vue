@@ -14,6 +14,7 @@
 
         <q-form @submit="handleLogin">
           <q-input
+            rounded
             v-model="email"
             type="email"
             label="Email"
@@ -23,6 +24,7 @@
             class="form-input"
           />
           <q-input
+            rounded
             v-model="password"
             type="password"
             label="Password"
