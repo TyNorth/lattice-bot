@@ -65,7 +65,7 @@
 
 <script setup>
 import { computed, ref, onMounted } from 'vue'
-import api from 'axios'
+import { api } from 'src/boot/axios'
 import ChatHeader from './ChatHeader.vue'
 import ChatMessages from './ChatMessages.vue'
 import ChatInput from './ChatInput.vue'
@@ -199,7 +199,8 @@ const fetchSimilarMemories = async (query) => {
 
 // Enhanced message sending with memory retrieval
 const sendMessage = async (message) => {
-  console.log('message', message)
+  console.log('message :', message)
+  console.log('api: ', api.postForm)
   if (!currentConversation.value) {
     await conversationStore.startConversation(userStore.getUser.id, 'New Conversation')
   }
@@ -208,17 +209,37 @@ const sendMessage = async (message) => {
   await conversationStore.addMessage(currentConversation.value.id, userMessage)
   const specialInstructions = instructionStore.instructions
   // Fetch similar memories
-  const similarMemories = await fetchSimilarMemories(message)
-  const memoryContext = similarMemories.map((mem) => mem.content).join('\n')
+  let memoryContext
+  let similarMemories
+  let payload
+  try {
+    similarMemories = await fetchSimilarMemories(message)
+  } catch (e) {
+    console.log('Error fetching memories', e)
+  }
+  if (similarMemories) {
+    memoryContext = similarMemories.map((mem) => mem.content).join('\n')
+    payload = {
+      message,
+      context: `${memoryContext}\n${currentConversation.value.messages.map((msg) => msg.text).join('\n')}`,
+      specialInstructions,
+    }
+  } else {
+    payload = {
+      message,
+      context: `${currentConversation.value.messages.map((msg) => msg.text).join('\n')}`,
+      specialInstructions,
+    }
+  }
   //const memoryContext = ''
   // Backend payload
-  const payload = {
-    message,
-    context: `${memoryContext}\n${currentConversation.value.messages.map((msg) => msg.text).join('\n')}`,
-    specialInstructions,
-  }
+  console.log('payload: ', payload)
+  console.log(process.env.NODE_ENV)
+  console.log(process.env)
+  console.log(`${process.env.DEV_SERVER_URL}/api/generate/`)
 
   try {
+    console.log('sending...')
     const response = await api.post(
       process.env.NODE_ENV === 'production'
         ? `${process.env.PROD_SERVER_URL}/api/generate/`
@@ -259,6 +280,7 @@ const deleteConversation = async () => {
 }
 
 onMounted(async () => {
+  console.log('mounting api: ', console.log(api.baseUrl))
   document.addEventListener('mouseup', handleTextSelection)
   try {
     await instructionStore.fetchInstructions(userStore.user.id)

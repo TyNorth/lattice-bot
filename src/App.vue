@@ -11,7 +11,7 @@ import { useUserStore } from 'src/stores/userStore'
 import { useConversationStore } from 'src/stores/conversationStore'
 import { useProjectStore } from 'src/stores/projectStore'
 import { useInstructionStore } from 'src/stores/instructionStore'
-
+import { api } from './boot/axios'
 // Initialize stores
 const userStore = useUserStore()
 const conversationStore = useConversationStore()
@@ -21,6 +21,7 @@ const instructionStore = useInstructionStore()
 const user = ref(null)
 
 onMounted(async () => {
+  console.log(api.baseURL)
   try {
     // Initialize user store and set up authentication listener
     const cleanupAuthListener = await userStore.initialize()

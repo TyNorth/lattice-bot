@@ -90,7 +90,6 @@ const handleLogin = async () => {
       notifyError(error.message)
     } else {
       // Update the user store with the logged-in user
-      console.log(data.user)
       userStore.setUser(data.user)
       notifySuccess('Login successful!')
       // Redirect to main page (or dashboard)
