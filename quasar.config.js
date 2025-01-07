@@ -50,7 +50,7 @@ export default defineConfig((ctx) => {
       env: {
         SUPABASE_URL: process.env.SUPABASE_URL,
         SUPABASE_KEY: process.env.SUPABASE_KEY,
-        DEV_SERVER_URL: process.env.DEV_SERVER_URL,
+        DEV_SERVER_URL: 'http://127.0.0.1:8000',
         PROD_SERVER_URL: process.env.PROD_SERVER_URL,
       },
       // rawDefine: {}

@@ -25,7 +25,7 @@ export default boot(({ app }) => {
   // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
   //       so you can easily perform requests against your app's API
 
-  api.defaults.baseURL = process.env.PROD_SERVER_URL
+  api.defaults.baseURL = 'http://127.0.0.1:800'
 })
 
 export { axios, api }
